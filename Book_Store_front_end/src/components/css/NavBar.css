@@ -1,0 +1,31 @@
+.navigation{
+    background-color: #222;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 14px 11px 6px -1px rgba(88, 58, 223, 0.6);
+    border-radius: 25px;
+    margin-bottom: 20px;
+}
+
+.bar{
+    
+    position: sticky;
+    top: 10px;
+    z-index: 1000;
+}
+
+.navi-links{
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: space-between;
+    width: 800px;
+    font-size: 20px;
+}
+
+.active-link{
+    border-bottom: 4px solid rgb(80, 80, 241);
+    font-weight: bold;
+}

@@ -1,0 +1,21 @@
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.app-container {
+  flex: 1;
+  margin: 20px auto;
+  padding: 2rem;
+  width: 100%;
+  background: #dddedf;
+  background-image: url("https://media.istockphoto.com/id/1327177590/photo/hindu-mythology-book.jpg?s=612x612&w=0&k=20&c=iWxwMnKP7ZHN2C6P7voe1IfbhrcMhw7uOAoTnb6qYrY=");
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: black;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
+}
