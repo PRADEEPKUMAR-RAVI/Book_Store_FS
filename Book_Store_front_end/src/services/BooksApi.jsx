@@ -11,10 +11,18 @@ const API = axios.create({
 });
 
 
-export const fetchBooks = async () =>{
+export const fetchBooks = async ({published, author, category, page, pageSize}) =>{
     console.log("[Fetching books from service - Api]")
+    console.log("Params:", {published, author, category, page, pageSize})
+
+    const params = {}
+    if(published) params.publish_category=published;
+    if(author) params.author=author;
+    if(category) params.category=category;
+    if(page) params.page=page;
+    if(pageSize) params.page_size=pageSize;
     try {
-        const res = await API.get("books/")
+        const res = await API.get("books/", {params})
         console.log(res.data)
         return res.data
     }catch (error) {

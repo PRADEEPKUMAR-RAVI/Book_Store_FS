@@ -1,8 +1,7 @@
 from typing import Optional, List
 from datetime import date,datetime
-from pydantic import Field
-
 from app.models.pydantics.base_model import CreateUpdateSchema, RequestSchema, BaseSchema
+from pydantic import Field, BaseModel
 
 
 class BookCreate(RequestSchema):
@@ -50,3 +49,9 @@ class CreateBookResponse(CreateUpdateSchema):
     language: Optional[str] = None
     is_published: bool = False
 
+class PaginatedResponse(BaseModel):
+    results: List[BookResponse]
+    total:int
+    page:int
+    page_size:int
+    total_pages:int

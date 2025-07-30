@@ -1,6 +1,7 @@
+from math import ceil
 from bson import ObjectId
 from fastapi import HTTPException
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -47,16 +48,32 @@ class BookService:
         await self._update_category_book_counts(category_ids)
         return await self.retrieve_book(str(result.inserted_id))
 
-    async def retrieve_books(self, published_filter: str) -> List[BookResponse]:
-        query = {
-            "Published": {"is_published": True},
-            "Non-Published": {"is_published": False}
-        }.get(published_filter, {})
+    async def retrieve_books(self, published_filter: str, author: Optional[str], category: Optional[str],page:int,page_size:int) -> Dict:
+        query = {}
+        if published_filter == "Published":
+            query["is_published"] = True
+        elif published_filter == "Non-Published":
+            query["is_published"] = False   
+        
+        if author:
+            query["author_id"] = author
+        if category:
+            query["category_ids"] = {"$in": category} if isinstance(category, list) else category
+
+        skip = (page-1)*page_size
+
+        total = await self.collection.count_documents(query)
 
         books = []
-        async for book in self.collection.find(query):
+        async for book in self.collection.find(query).skip(skip).limit(page_size):
             books.append(BookResponse(**await self.__enrich_book(book)))
-        return books
+        return {
+            "results": books,   
+            "total": total,
+            "page": page,
+            "page_size": page_size,
+            "total_pages": ceil(total / page_size)
+        }
 
     async def retrieve_book(self, book_id: str) -> BookResponse:
         book = await self.collection.find_one({'_id': ObjectId(book_id)})

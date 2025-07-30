@@ -26,7 +26,7 @@ def verify_hashed_password(password: str, hashed_pass: str) -> bool:
 
 def generate_tokens(user_id: str) -> TokenResponse:
     
-    access_token=create_token(user_id, "access"),
+    access_token=create_token(user_id, "access")
     refresh_token=create_token(user_id, "refresh")
     response = JSONResponse(content={"access_token": access_token})
     response.set_cookie(
@@ -44,6 +44,9 @@ def create_token(user_id: str, token_type: str) -> str:
     expire = datetime.now(timezone.utc) + timedelta(minutes=exp_minutes)
     payload = {"user_id": user_id, "exp": expire, "token_type": token_type}
     key = JWT_SECRET_KEY if token_type == "access" else JWT_REFRESH_SECRET_KEY
+    print("---------------------------------------------------------------")
+    print(f"Creating {token_type} token with payload: {payload}")
+    print(f"Creating {token_type} token with key: {repr(key)}")
     return jwt.encode(payload, key, algorithm=ALGORITHM)
 
 

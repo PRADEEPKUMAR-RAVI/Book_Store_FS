@@ -1,20 +1,24 @@
-from typing import List
+from typing import List, Optional
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.database import get_database
 from app.services.book_service import BookService
-from app.models.pydantics.book_pydantic import BookCreate, BookUpdate, BookResponse,CreateBookResponse
+from app.models.pydantics.book_pydantic import BookCreate, BookUpdate, BookResponse,CreateBookResponse, PaginatedResponse
 
 book_router = APIRouter(prefix='/books', tags=['Books'])
 
-@book_router.get('/', response_model=List[BookResponse])
+@book_router.get('/', response_model=PaginatedResponse)
 async def retrieve_all_books(
-    publish_category: str = Query("None", enum=['None', 'Published', 'Non-Published']),
+    publish_category: str = Query("None", enum=['None', 'Published', 'Non-Published']), 
+    author:Optional[str] = None,
+    category: Optional[str] = None,
+    page: int = Query(1,ge=1),
+    page_size : int = Query(1,ge=1),
     db: AsyncIOMotorClient = Depends(get_database)
 ):
     service = BookService(db)
-    return await service.retrieve_books(publish_category)
+    return await service.retrieve_books(publish_category, author, category,page,page_size)
 
 
 @book_router.post('/', response_model=CreateBookResponse, status_code=201)
